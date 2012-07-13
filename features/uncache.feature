@@ -1,4 +1,4 @@
-Feature: uncacher
+Feature: uncache
   As a MODX user
   I need to be able to clear the cache of an individual resource and its parents
 
