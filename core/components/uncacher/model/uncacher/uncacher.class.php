@@ -18,22 +18,22 @@ class Uncacher {
     $this->modx->addPackage('uncacher', $this->config['modelPath']);
   }
 
+  // getParentIds doesn't work on new resources, WTF
+  // couldn't they do this when there's no URL map?!
+  private function add_parent(&$ids, &$res, &$modx) {
+    $par = $res->get('parent');
+    if ($par) {
+      array_push($ids, $par);
+      $par_res = $modx->getObject('modResource', $par);
+      $this->add_parent($ids, $par_res, $modx);
+    }
+  }
+
   function uncache($res, $recache) {
     $ids = array();
 
-    // getParentIds doesn't work on new resources, WTF
-    // couldn't they do this when there's no URL map?!
-    function add_parent(&$ids, $res, &$modx) {
-      $par = $res->get('parent');
-      if ($par) {
-        array_push($ids, $par);
-        $par_res = $modx->getObject('modResource', $par);
-        add_parent($ids, $par_res, $modx);
-      }
-    }
-
     array_push($ids, $res->get('id')); // current doc
-    add_parent($ids, $res, $this->modx);
+    $this->add_parent($ids, $res, $this->modx);
     array_push($ids, 1); // index page TODO: non-1 index page
 
     // Clear the URL map
@@ -48,6 +48,20 @@ class Uncacher {
       if ($recache == true) {
         file_get_contents($this->modx->makeUrl($id, '', '', 'full'));
       }
+    }
+  }
+
+  function uncacheRecent($minutes, $recache) {
+    $resources = $this->modx->getIterator('modResource', array(
+      'pub_date:>=' => strtotime('now - '.$minutes.' minutes')
+    ));
+
+    foreach ($resources as $idx => $res) {
+      $res->set('publishedon', $res->pub_date);
+      $res->set('pub_date', '');
+      $res->set('published', 1);
+      $res->save();
+      $this->uncache($res, $recache);
     }
   }
 }

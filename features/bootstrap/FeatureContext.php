@@ -69,6 +69,13 @@ class FeatureContext extends BehatContext {
     $this->saveResource($res, $pagetitle);
   }
 
+  /** @Given /^I have a cached resource named "([^"]*)" with pub_date "([^"]*)"$/ */
+  public function iHaveACachedResourceNamedWithPubdate($pagetitle, $pub_date) {
+    $res = $this->modx->newObject('modDocument');
+    $res->set('pub_date', strtotime($pub_date));
+    $this->saveResource($res, $pagetitle);
+  }
+
   /** @Given /^I have a cached resource named "([^"]*)" under "([^"]*)"$/ */
   public function iHaveACachedResourceNamedUnder($pagetitle, $parent) {
     $res = $this->modx->newObject('modDocument');
@@ -82,6 +89,11 @@ class FeatureContext extends BehatContext {
     $this->uncacher->uncache($res, false);
   }
 
+  /** @When /^I clear the cache of resources published in "([^"]*)" minutes$/ */
+  public function iClearTheCacheOfResourcesPublishedIn($minutes) {
+    $this->uncacher->uncacheRecent($minutes, false);
+  }
+
   /** @Then /^resource "([^"]*)" is not cached$/ */
   public function resourceIsNotCached($pagetitle) {
     $url = $this->makeUrl($this->getResource($pagetitle)->get('id'));
@@ -92,6 +104,13 @@ class FeatureContext extends BehatContext {
   public function resourceIsCached($pagetitle) {
     $url = $this->makeUrl($this->getResource($pagetitle)->get('id'));
     assert(file_get_contents($url) == $pagetitle.' from cache');
+  }
+
+  /** @Then /^resource "([^"]*)" is published "([^"]*)"$/ */
+  public function resourceIsPublished($pagetitle, $published) {
+    $res = $this->getResource($pagetitle);
+    // cutting off seconds with substr
+    assert(substr(strtotime($res->get('publishedon')), 0, 9) == substr(strtotime($published), 0, 9));
   }
 
   public function __destruct() {
