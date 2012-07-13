@@ -75,7 +75,7 @@ class FeatureContext extends BehatContext {
   /** @When /^I clear the cache of "([^"]*)"$/ */
   public function iClearTheCacheOf($pagetitle) {
     $res = $this->getResource($pagetitle);
-    $this->uncacher->uncache($res);
+    $this->uncacher->uncache($res, false);
   }
 
   /** @Then /^resource "([^"]*)" is not cached$/ */
@@ -91,7 +91,7 @@ class FeatureContext extends BehatContext {
   }
 
   public function __destruct() {
-    /* $this->modx->getObject('modTemplate', $this->tpl_id)->remove(); */
+    $this->modx->getObject('modTemplate', $this->tpl_id)->remove();
     foreach($this->res_ids as $rid) {
       $this->modx->getObject('modResource', $rid)->remove();
     }

@@ -18,7 +18,7 @@ class Uncacher {
     $this->modx->addPackage('uncacher', $this->config['modelPath']);
   }
 
-  function uncache($res, $recache = false) {
+  function uncache($res, $recache) {
     $ids = array();
 
     // getParentIds doesn't work on new resources, WTF
@@ -45,7 +45,7 @@ class Uncacher {
     // Re-cache resources
     foreach($ids as $id) {
       unlink(MODX_CORE_PATH.'cache/resource/web/resources/'.$id.'.cache.php');
-      if ($recache) {
+      if ($recache == true) {
         file_get_contents($this->modx->makeUrl($id, '', '', 'full'));
       }
     }
