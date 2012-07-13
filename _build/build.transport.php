@@ -30,6 +30,25 @@ $modx->loadClass('transport.modPackageBuilder', '', false, true);
 $builder = new modPackageBuilder($modx);
 $builder->createPackage(PKG_NAME_LOWER, PKG_VERSION, PKG_RELEASE);
 $builder->registerNamespace(PKG_NAME_LOWER, false, true, '{core_path}components/' . PKG_NAME_LOWER . '/');
+
+$modx->log(modX::LOG_LEVEL_INFO, 'Packaging in snippets...');
+$snippets = include $sources['data'] . 'transport.snippets.php';
+if (empty($snippets)) {
+  $modx->log(modX::LOG_LEVEL_ERROR, 'Could not package in snippets.');
+} else {
+  $vehicle = $builder->createVehicle($snippets[0], array(
+    xPDOTransport::UNIQUE_KEY => 'name',
+    xPDOTransport::PRESERVE_KEYS => false,
+    xPDOTransport::UPDATE_OBJECT => true,
+  ));
+  $modx->log(modX::LOG_LEVEL_INFO, 'Adding file resolvers to snippet...');
+  $vehicle->resolve('file', array(
+    'source' => $sources['source_core'],
+    'target' => "return MODX_CORE_PATH . 'components/';",
+  ));
+  $builder->putVehicle($vehicle);
+}
+
 $modx->log(modX::LOG_LEVEL_INFO, 'Packaging in plugins...');
 $plugins = include $sources['data'] . 'transport.plugins.php';
 if (empty($plugins)) {
@@ -58,6 +77,7 @@ if (empty($plugins)) {
   ));
   $builder->putVehicle($vehicle);
 }
+
 $modx->log(modX::LOG_LEVEL_INFO, 'Adding package attributes and setup options...');
 $builder->setPackageAttributes(array(
   'readme' => file_get_contents($sources['docs'] . 'README.md'),
