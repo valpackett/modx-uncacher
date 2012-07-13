@@ -6,7 +6,7 @@ class Uncacher {
   function __construct(modX &$modx, array $config = array()) {
     $this->modx = &$modx;
 
-    $basePath = $this->modx->getOption('uncacher.core_path', $config, $this->modx->getOption('core_path').'components/doodles/');
+    $basePath = $this->modx->getOption('uncacher.core_path', $config, $this->modx->getOption('core_path').'components/uncacher/');
     $this->config = array_merge(array(
       'basePath' => $basePath,
       'corePath' => $basePath,

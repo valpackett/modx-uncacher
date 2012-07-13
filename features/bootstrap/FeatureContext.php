@@ -5,8 +5,8 @@ use Behat\Behat\Context\ClosuredContextInterface,
     Behat\Behat\Context\BehatContext,
     Behat\Behat\Event\SuiteEvent,
     Behat\Behat\Exception\PendingException;
-use Behat\Gherkin\Node\PyStringNode,
-    Behat\Gherkin\Node\TableNode;
+/* use Behat\Gherkin\Node\PyStringNode, */
+/*     Behat\Gherkin\Node\TableNode; */
 
 require_once '../../require_modx.php';
 
