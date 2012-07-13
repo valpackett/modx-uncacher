@@ -8,8 +8,7 @@ use Behat\Behat\Context\ClosuredContextInterface,
 use Behat\Gherkin\Node\PyStringNode,
     Behat\Gherkin\Node\TableNode;
 
-require_once '/Users/myfreeweb/Sites/config.core.php';
-require_once MODX_CORE_PATH.'model/modx/modx.class.php';
+require_once '../../require_modx.php';
 
 class FeatureContext extends BehatContext {
   /**
