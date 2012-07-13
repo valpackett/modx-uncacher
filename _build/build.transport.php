@@ -24,7 +24,6 @@ require_once $root.'/require_modx.php';
 
 $modx = new modX();
 $modx->initialize('mgr');
-echo '<pre>';
 $modx->setLogLevel(modX::LOG_LEVEL_INFO);
 $modx->setLogTarget('ECHO');
 $modx->loadClass('transport.modPackageBuilder', '', false, true);
@@ -63,11 +62,12 @@ $modx->log(modX::LOG_LEVEL_INFO, 'Adding package attributes and setup options...
 $builder->setPackageAttributes(array(
   'readme' => file_get_contents($sources['docs'] . 'README.md'),
   'changelog' => file_get_contents($sources['docs'] . 'CHANGELOG.md'),
+  'license' => file_get_contents($sources['docs'] . 'LICENSE.md'),
 ));
 $modx->log(modX::LOG_LEVEL_INFO, 'Packing up transport package zip...');
 $builder->pack();
 $endTime = explode(' ', microtime());
 $endTime = $endTime[1] + $endTime[0];
 $totalTime = sprintf('%2.4f s', ($endTime - $startTime));
-$modx->log(modX::LOG_LEVEL_INFO, "Package Built.<br />\nExecution time: {$totalTime}\n");
+$modx->log(modX::LOG_LEVEL_INFO, "Package Built.\nExecution time: {$totalTime}\n");
 exit();
