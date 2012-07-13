@@ -4,6 +4,6 @@ $uncacher = $modx->getService('uncacher', 'Uncacher', $modx->getOption('uncacher
 if (!($uncacher instanceof Uncacher)) return '';
 
 $e = &$modx->event;
-$id = $e->params['resource']->id;
+$res = $e->params['resource'];
 
-$uncacher->uncache($id, true);
+$uncacher->uncache($res, true);
