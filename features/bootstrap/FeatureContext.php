@@ -1,5 +1,11 @@
 <?php
 
+assert_options( ASSERT_CALLBACK, 'assert_callback');
+
+function assert_callback($script, $line, $message) {
+  throw new Exception('Failed assertion at '.$script.':'.$line.': '.$message);
+}
+
 use Behat\Behat\Context\ClosuredContextInterface,
     Behat\Behat\Context\TranslatedContextInterface,
     Behat\Behat\Context\BehatContext,
@@ -8,7 +14,7 @@ use Behat\Behat\Context\ClosuredContextInterface,
 /* use Behat\Gherkin\Node\PyStringNode, */
 /*     Behat\Gherkin\Node\TableNode; */
 
-require_once '../../require_modx.php';
+require_once dirname(dirname(dirname(__FILE__))).'/require_modx.php';
 
 class FeatureContext extends BehatContext {
   /**
@@ -23,7 +29,6 @@ class FeatureContext extends BehatContext {
     $this->modx->getService('error', 'error.modError');
 
     $this->modx->setOption('uncacher.core_path', getcwd().'/core/components/uncacher/');
-
     $this->uncacher = $this->modx->getService('uncacher', 'Uncacher', $this->modx->getOption('uncacher.core_path', null).'model/uncacher/');
     if (!($this->uncacher instanceof Uncacher)) throw new Exception('Uncacher not loaded');
 
