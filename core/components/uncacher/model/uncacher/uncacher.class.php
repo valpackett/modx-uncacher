@@ -37,9 +37,16 @@ class Uncacher {
     array_push($ids, $this->modx->getOption('site_start'));
 
     // Clear the URL map
+    $query = $this->modx->newQuery('modContext');
+    $query->select($this->modx->escape('key'));
+    if ($query->prepare() && $query->stmt->execute()) {
+      $contexts = $query->stmt->fetchAll(PDO::FETCH_COLUMN);
+    } else {
+      $contexts = array('web');
+      $this->modx->log(modX::LOG_LEVEL_ERROR, 'Couldn\'t fetch contexts!');
+    }
     $this->modx->cacheManager->refresh(array(
-      // TODO: different contexts
-      'context_settings' => array('contexts' => array('web'))
+      'context_settings' => array('contexts' => $contexts)
     ));
 
     // Re-cache resources
@@ -57,7 +64,7 @@ class Uncacher {
     ));
 
     foreach ($resources as $idx => $res) {
-      $res->set('publishedon', $res->pub_date);
+      $res->set('publishedon', $res->get('pub_date'));
       $res->set('pub_date', '');
       $res->set('published', 1);
       $res->save();
