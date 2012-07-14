@@ -29,7 +29,7 @@ class Uncacher {
     }
   }
 
-  function uncache($res, $recache) {
+  function uncache(&$res, $recache) {
     $ids = array();
 
     array_push($ids, $res->get('id')); // current doc
@@ -58,6 +58,8 @@ class Uncacher {
         file_get_contents($this->modx->makeUrl($id, '', '', 'full'));
       }
     }
+
+    return true;
   }
 
   function uncacheRecent($minutes, $recache) {
@@ -73,5 +75,7 @@ class Uncacher {
       $res->save();
       $this->uncache($res, $recache);
     }
+
+    return true;
   }
 }
