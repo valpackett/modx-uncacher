@@ -52,7 +52,7 @@ class Uncacher {
     $this->modx->log(modX::LOG_LEVEL_INFO, 'Uncacher uncaching resources: '.implode(', ', $ids));
 
     // Re-cache resources
-    foreach($ids as $id) {
+    foreach ($ids as $id) {
       unlink(MODX_CORE_PATH.'cache/resource/web/resources/'.$id.'.cache.php');
       if ($recache == true) {
         file_get_contents($this->modx->makeUrl($id, '', '', 'full'));
