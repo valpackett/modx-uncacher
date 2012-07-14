@@ -18,23 +18,23 @@ class Uncacher {
     $this->modx->addPackage('uncacher', $this->config['modelPath']);
   }
 
-  // getParentIds doesn't work on new resources, WTF
+  // getParentresources doesn't work on new resources, WTF
   // couldn't they do this when there's no URL map?!
-  private function add_parent(&$ids, &$res, &$modx) {
+  private function add_parent(&$resources, &$res, &$modx) {
     $par = $res->get('parent');
     if ($par) {
-      array_push($ids, $par);
       $par_res = $modx->getObject('modResource', $par);
-      $this->add_parent($ids, $par_res, $modx);
+      array_push($resources, $par_res);
+      $this->add_parent($resources, $par_res, $modx);
     }
   }
 
   function uncache(&$res, $recache) {
-    $ids = array();
+    $resources = array();
 
-    array_push($ids, $res->get('id')); // current doc
-    $this->add_parent($ids, $res, $this->modx);
-    array_push($ids, $this->modx->getOption('site_start'));
+    array_push($resources, $res);
+    $this->add_parent($resources, $res, $this->modx);
+    array_push($resources, $this->modx->getObject('modResource', $this->modx->getOption('site_start')));
 
     // Clear the URL map
     $query = $this->modx->newQuery('modContext');
@@ -49,11 +49,20 @@ class Uncacher {
       'context_settings' => array('contexts' => $contexts)
     ));
 
-    $this->modx->log(modX::LOG_LEVEL_INFO, 'Uncacher uncaching resources: '.implode(', ', $ids));
 
     // Re-cache resources
-    foreach ($ids as $id) {
-      unlink(MODX_CORE_PATH.'cache/resource/web/resources/'.$id.'.cache.php');
+    foreach ($resources as $res) {
+      $path = MODX_CORE_PATH.'cache/resource/'.$res->get('context_key').'/resources/'.$res->get('id');
+      $fpath = $path.'.cache.php'; // TODO: support json and serialized cache? who ever uses it?
+
+      if (is_dir($path)) {
+        $this->modx->log(modX::LOG_LEVEL_INFO, 'Uncacher deleting '.$path);
+        $this->modx->cacheManager->deleteTree($path, array('deleteTop' => true));
+      }
+      if (is_file($fpath)) {
+        $this->modx->log(modX::LOG_LEVEL_INFO, 'Uncacher deleting '.$fpath);
+        unlink($fpath);
+      }
       if ($recache == true) {
         file_get_contents($this->modx->makeUrl($id, '', '', 'full'));
       }
