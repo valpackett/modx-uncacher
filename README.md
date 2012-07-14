@@ -8,7 +8,7 @@ This module was extracted from a live high-traffic website of a Russian magazine
 ## Installation
 First, download and install it with the MODX package manager (System, Package Management) like any other package.
 
-Second, set the `cache_default` system setting to No and uncheck the "Empty Cache" flag on every resource you edit.
+Second, uncheck the "Empty Cache" flag on every resource you edit.
 
 And make sure you're using `xPDOFileCache` as `cache_handler` – the Memcache handler doesn't support clearing the cache of just one resource.
 
