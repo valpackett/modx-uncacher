@@ -1,7 +1,7 @@
 # Uncacher for MODX Revolution
 Do you have a *big* MODX website? Like, thousands of resources and lots of stuff in the templates? Are your pages taking several seconds to render when they aren't cached? When search engines start crawling a site like that when it's not fully cached, it may become extremely slow. So **you can't afford cleaning the whole cache every time you save a resource**.
 
-This module provides a different strategy: when you save a resource (or its pub_date time comes), it clears and regenerates the cache of this resource, its parents and the index page.
+This module provides a different strategy: when you save a resource (or its pub_date time comes), it clears and regenerates the cache of this resource, its parents and the index page (`site_start` system setting).
 
 This module was extracted from a live high-traffic website of a Russian magazine.
 

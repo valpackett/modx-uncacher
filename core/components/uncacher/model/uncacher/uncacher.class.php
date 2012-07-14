@@ -34,7 +34,7 @@ class Uncacher {
 
     array_push($ids, $res->get('id')); // current doc
     $this->add_parent($ids, $res, $this->modx);
-    array_push($ids, 1); // index page TODO: non-1 index page
+    array_push($ids, $this->modx->getOption('site_start'));
 
     // Clear the URL map
     $this->modx->cacheManager->refresh(array(
