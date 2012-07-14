@@ -27,6 +27,8 @@ class FeatureContext extends BehatContext {
     $this->modx = new modX();
     $this->modx->initialize('web');
     $this->modx->getService('error', 'error.modError');
+    $this->modx->setLogLevel(modX::LOG_LEVEL_INFO);
+    $this->modx->setLogTarget('ECHO');
 
     $this->modx->setOption('uncacher.core_path', getcwd().'/core/components/uncacher/');
     $this->uncacher = $this->modx->getService('uncacher', 'Uncacher', $this->modx->getOption('uncacher.core_path', null).'model/uncacher/');

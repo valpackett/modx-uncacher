@@ -49,6 +49,8 @@ class Uncacher {
       'context_settings' => array('contexts' => $contexts)
     ));
 
+    $this->modx->log(modX::LOG_LEVEL_INFO, 'Uncacher uncaching resources: '.implode(', ', $ids));
+
     // Re-cache resources
     foreach($ids as $id) {
       unlink(MODX_CORE_PATH.'cache/resource/web/resources/'.$id.'.cache.php');
