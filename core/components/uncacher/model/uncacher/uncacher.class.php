@@ -64,7 +64,7 @@ class Uncacher {
         unlink($fpath);
       }
       if ($recache == true) {
-        file_get_contents($this->modx->makeUrl($id, '', '', 'full'));
+        file_get_contents($this->modx->makeUrl($res->get('id'), '', '', 'full'));
       }
     }
 
