@@ -60,7 +60,8 @@ class Uncacher {
 
   function uncacheRecent($minutes, $recache) {
     $resources = $this->modx->getIterator('modResource', array(
-      'pub_date:>=' => strtotime('now - '.$minutes.' minutes')
+      'pub_date:>=' => strtotime('now - '.$minutes.' minutes - 5 seconds'),
+      'pub_date:<' => strtotime('now + 5 seconds'),
     ));
 
     foreach ($resources as $idx => $res) {
