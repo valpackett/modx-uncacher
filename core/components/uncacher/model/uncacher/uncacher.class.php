@@ -52,17 +52,11 @@ class Uncacher {
 
     // Re-cache resources
     foreach ($resources as $res) {
-      $path = MODX_CORE_PATH.'cache/resource/'.$res->get('context_key').'/resources/'.$res->get('id');
-      $fpath = $path.'.cache.php'; // TODO: support json and serialized cache? who ever uses it?
-
-      if (is_dir($path)) {
-        $this->modx->log(modX::LOG_LEVEL_INFO, 'Uncacher deleting '.$path);
-        $this->modx->cacheManager->deleteTree($path, array('deleteTop' => true));
-      }
-      if (is_file($fpath)) {
-        $this->modx->log(modX::LOG_LEVEL_INFO, 'Uncacher deleting '.$fpath);
-        unlink($fpath);
-      }
+      $this->modx->cacheManager->delete($res->getCacheKey(), array(
+        xPDO::OPT_CACHE_KEY => $this->modx->getOption('cache_resource_key', null, 'resource'),
+        xPDO::OPT_CACHE_HANDLER => $this->modx->getOption('cache_resource_handler', null, $this->modx->getOption(xPDO::OPT_CACHE_HANDLER)),
+        xPDO::OPT_CACHE_FORMAT => (integer) $this->modx->getOption('cache_resource_format', null, $this->modx->getOption(xPDO::OPT_CACHE_FORMAT, null, xPDOCacheManager::CACHE_PHP)))
+      );
       if ($recache == true) {
         file_get_contents($this->modx->makeUrl($res->get('id'), '', '', 'full'));
       }

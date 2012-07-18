@@ -10,8 +10,6 @@ First, download and install it with the MODX package manager (System, Package Ma
 
 Second, uncheck the "Empty Cache" flag on every resource you edit.
 
-And make sure you're using `xPDOFileCache` as `cache_handler` – the Memcache handler doesn't support clearing the cache of just one resource.
-
 If you don't use the publishing-at-a-specified-time functionality, you can stop reading right there.
 
 If you do need it, set [CronManager](http://rtfm.modx.com/display/ADDON/CronManager) up and add a cron job calling the `uncacheRecent` snippet every `n` minutes and with options `minutes: n`, where `n` is how often to check. Five minutes is a good choice, but you can set it to one minute if you need that much precision.
