@@ -24,8 +24,10 @@ class Uncacher {
     $par = $res->get('parent');
     if ($par) {
       $par_res = $modx->getObject('modResource', $par);
-      array_push($resources, $par_res);
-      $this->add_parent($resources, $par_res, $modx);
+      if($par_res) {
+        array_push($resources, $par_res);
+        $this->add_parent($resources, $par_res, $modx);
+      }
     }
   }
 
@@ -34,7 +36,10 @@ class Uncacher {
 
     array_push($resources, $res);
     $this->add_parent($resources, $res, $this->modx);
-    array_push($resources, $this->modx->getObject('modResource', $this->modx->getOption('site_start')));
+    $start = $this->modx->getObject('modResource', $this->modx->getOption('site_start'));
+    if($start) {
+        array_push($resources, $start);
+    }
 
     // Clear the URL map
     $query = $this->modx->newQuery('modContext');
